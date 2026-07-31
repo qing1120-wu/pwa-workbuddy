@@ -297,7 +297,7 @@
                         <span class="dim-tag gold">⏰ 发布时间</span>
                     </div>
                 </div>
-                <div class="quick-action qa-data" onclick="event.stopPropagation();sendPrompt('帮我分析我的作品，我会发视频或链接给你')">📤 发视频/链接开始分析</div>
+                <div class="quick-action qa-data" onclick="event.stopPropagation();doAction('data')">📤 发视频/链接开始分析</div>
             </div>
         </div>
 
@@ -431,31 +431,31 @@
 
         <div class="section-container">
             <div class="section-label">快捷操作</div>
-            <div class="card card-hot" style="padding:14px 16px" onclick="sendPrompt('现在帮我搜一下今天的热点')">
+            <div class="card card-hot" style="padding:14px 16px" onclick="doAction('hot')">
                 <div style="display:flex;align-items:center;gap:12px">
                     <span style="font-size:22px">⚡</span>
-                    <div style="flex:1"><div style="font-size:15px;font-weight:600">立即查看今日热点</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">不等定时推送，现在就搜</div></div>
+                    <div style="flex:1"><div style="font-size:15px;font-weight:600">立即查看今日热点</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">跳转各大热搜平台</div></div>
                     <span style="color:var(--text-tertiary);font-size:18px">›</span>
                 </div>
             </div>
-            <div class="card card-dance" style="padding:14px 16px" onclick="sendPrompt('现在帮我搜一下变装反差、妆前妆后的最新优质视频，抖音快手小红书都要')">
+            <div class="card card-dance" style="padding:14px 16px" onclick="doAction('dance')">
                 <div style="display:flex;align-items:center;gap:12px">
                     <span style="font-size:22px">🔎</span>
-                    <div style="flex:1"><div style="font-size:15px;font-weight:600">立即搜索变装反差视频</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">不等定时推送，现在就搜</div></div>
+                    <div style="flex:1"><div style="font-size:15px;font-weight:600">立即搜索变装反差视频</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">跳转抖音/快手/小红书搜索</div></div>
                     <span style="color:var(--text-tertiary);font-size:18px">›</span>
                 </div>
             </div>
-            <div class="card card-data" style="padding:14px 16px" onclick="sendPrompt('帮我分析我的作品，我会发视频或链接给你')">
+            <div class="card card-data" style="padding:14px 16px" onclick="doAction('data')">
                 <div style="display:flex;align-items:center;gap:12px">
                     <span style="font-size:22px">📊</span>
-                    <div style="flex:1"><div style="font-size:15px;font-weight:600">分析我的作品</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">发视频/链接，逐条诊断+改进建议</div></div>
+                    <div style="flex:1"><div style="font-size:15px;font-weight:600">分析我的作品</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">回到 WorkBuddy 对话发视频分析</div></div>
                     <span style="color:var(--text-tertiary);font-size:18px">›</span>
                 </div>
             </div>
-            <div class="card card-analysis" style="padding:14px 16px" onclick="sendPrompt('帮我查看我当前的定时任务列表')">
+            <div class="card card-analysis" style="padding:14px 16px" onclick="doAction('tasks')">
                 <div style="display:flex;align-items:center;gap:12px">
                     <span style="font-size:22px">⚙️</span>
-                    <div style="flex:1"><div style="font-size:15px;font-weight:600">管理定时任务</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">查看 / 暂停 / 修改 / 删除</div></div>
+                    <div style="flex:1"><div style="font-size:15px;font-weight:600">管理定时任务</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">回到 WorkBuddy 对话管理任务</div></div>
                     <span style="color:var(--text-tertiary);font-size:18px">›</span>
                 </div>
             </div>
@@ -476,9 +476,9 @@
 
     <!-- Bottom Nav -->
     <div class="bottom-nav">
-        <div class="nav-item active"><span class="nav-icon">🏠</span><span>工作台</span></div>
-        <div class="nav-item" onclick="sendPrompt('帮我查看定时任务列表')"><span class="nav-icon">⏰</span><span>任务</span></div>
-        <div class="nav-item" onclick="sendPrompt('帮我分析我的作品，我会发视频或链接给你')"><span class="nav-icon">📊</span><span>分析</span></div>
+        <div class="nav-item active" onclick="scrollToTop()"><span class="nav-icon">🏠</span><span>工作台</span></div>
+        <div class="nav-item" onclick="doAction('tasks')"><span class="nav-icon">⏰</span><span>任务</span></div>
+        <div class="nav-item" onclick="doAction('data')"><span class="nav-icon">📊</span><span>分析</span></div>
         <div class="nav-item" onclick="toggleTheme()"><span class="nav-icon" id="navThemeIcon">🌙</span><span id="navThemeLabel">夜间</span></div>
     </div>
 
@@ -493,8 +493,44 @@
         function toggleTheme(){var html=document.documentElement;var cur=html.getAttribute('data-theme');var nt=cur==='light'?'dark':'light';if(nt==='light'){html.setAttribute('data-theme','light');document.getElementById('navThemeIcon').textContent='☀️';document.getElementById('navThemeLabel').textContent='日间';document.querySelector('meta[name="theme-color"]').setAttribute('content','#667eea')}else{html.removeAttribute('data-theme');document.getElementById('navThemeIcon').textContent='🌙';document.getElementById('navThemeLabel').textContent='夜间';document.querySelector('meta[name="theme-color"]').setAttribute('content','#1a1a3e')}try{localStorage.setItem('theme',nt)}catch(e){}}try{var s=localStorage.getItem('theme');if(s==='light'){document.documentElement.setAttribute('data-theme','light');document.getElementById('navThemeIcon').textContent='☀️';document.getElementById('navThemeLabel').textContent='日间';document.querySelector('meta[name="theme-color"]').setAttribute('content','#667eea')}}catch(e){}
 
         // === Card Actions ===
-        function cardAction(type){if(type==='hot')sendPrompt('现在帮我搜一下今天的热点');else if(type==='dance')sendPrompt('现在帮我搜一下变装反差、妆前妆后的最新优质视频，抖音快手小红书都要');else if(type==='data')sendPrompt('帮我分析我的作品，我会发视频或链接给你')}
-        function sendPrompt(text){console.log('sendPrompt:',text)}
+        function cardAction(type){doAction(type)}
+        function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
+
+        function doAction(type){
+            if(type==='hot'){
+                // 弹窗让用户选择打开哪个热搜平台
+                var menu=document.createElement('div');
+                menu.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:999;display:flex;align-items:flex-end;justify-content:center';
+                menu.onclick=function(e){if(e.target===menu)menu.remove()};
+                var box=document.createElement('div');
+                box.style.cssText='background:var(--bg-card);border-radius:20px 20px 0 0;padding:24px 20px 34px;width:100%;max-width:430px;animation:slideUp .3s ease';
+                box.innerHTML='<div style="font-size:17px;font-weight:700;margin-bottom:16px;text-align:center">🔥 选择热搜平台</div>'+
+                    '<a href="https://weibo.com/newlogin?tabtype=search" target="_blank" style="display:block;padding:14px;margin-bottom:8px;background:rgba(255,107,107,0.08);border-radius:12px;color:var(--text-primary);text-decoration:none;font-size:15px;font-weight:600">📢 微博热搜</a>'+
+                    '<a href="https://www.douyin.com/hot" target="_blank" style="display:block;padding:14px;margin-bottom:8px;background:rgba(255,107,107,0.08);border-radius:12px;color:var(--text-primary);text-decoration:none;font-size:15px;font-weight:600">🎵 抖音热榜</a>'+
+                    '<a href="https://top.baidu.com/board" target="_blank" style="display:block;padding:14px;margin-bottom:8px;background:rgba(255,107,107,0.08);border-radius:12px;color:var(--text-primary);text-decoration:none;font-size:15px;font-weight:600">🔍 百度热搜</a>'+
+                    '<a href="https://www.zhihu.com/hot" target="_blank" style="display:block;padding:14px;margin-bottom:8px;background:rgba(255,107,107,0.08);border-radius:12px;color:var(--text-primary);text-decoration:none;font-size:15px;font-weight:600">💡 知乎热榜</a>'+
+                    '<button onclick="this.parentElement.parentElement.remove()" style="width:100%;padding:14px;background:var(--bg-tag);border:none;border-radius:12px;color:var(--text-secondary);font-size:15px;cursor:pointer;margin-top:4px">取消</button>';
+                menu.appendChild(box);document.body.appendChild(menu);
+            }else if(type==='dance'){
+                var menu=document.createElement('div');
+                menu.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:999;display:flex;align-items:flex-end;justify-content:center';
+                menu.onclick=function(e){if(e.target===menu)menu.remove()};
+                var box=document.createElement('div');
+                box.style.cssText='background:var(--bg-card);border-radius:20px 20px 0 0;padding:24px 20px 34px;width:100%;max-width:430px;animation:slideUp .3s ease';
+                box.innerHTML='<div style="font-size:17px;font-weight:700;margin-bottom:16px;text-align:center">💄 搜索变装反差视频</div>'+
+                    '<a href="https://www.douyin.com/search/%E5%8F%98%E8%A3%85%E5%8F%8D%E5%B7%AE" target="_blank" style="display:block;padding:14px;margin-bottom:8px;background:rgba(240,98,146,0.08);border-radius:12px;color:var(--text-primary);text-decoration:none;font-size:15px;font-weight:600">🎵 抖音 · 变装反差</a>'+
+                    '<a href="https://www.douyin.com/search/%E5%A6%86%E5%89%8D%E5%A6%86%E5%90%8E" target="_blank" style="display:block;padding:14px;margin-bottom:8px;background:rgba(240,98,146,0.08);border-radius:12px;color:var(--text-primary);text-decoration:none;font-size:15px;font-weight:600">💄 抖音 · 妆前妆后</a>'+
+                    '<a href="https://www.kuaishou.com/search/video?searchKey=%E5%8F%98%E8%A3%85%E5%8F%8D%E5%B7%AE" target="_blank" style="display:block;padding:14px;margin-bottom:8px;background:rgba(240,98,146,0.08);border-radius:12px;color:var(--text-primary);text-decoration:none;font-size:15px;font-weight:600">📱 快手 · 变装反差</a>'+
+                    '<button onclick="this.parentElement.parentElement.remove()" style="width:100%;padding:14px;background:var(--bg-tag);border:none;border-radius:12px;color:var(--text-secondary);font-size:15px;cursor:pointer;margin-top:4px">取消</button>';
+                menu.appendChild(box);document.body.appendChild(menu);
+            }else if(type==='data'||type==='tasks'){
+                var toast=document.createElement('div');
+                toast.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg-card);color:var(--text-primary);padding:20px 28px;border-radius:16px;z-index:999;text-align:center;font-size:15px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,0.4);line-height:1.6';
+                toast.innerHTML='💡 请回到 <b>WorkBuddy</b> 对话<br>发送指令给我操作';
+                document.body.appendChild(toast);
+                setTimeout(function(){toast.style.transition='opacity .3s';toast.style.opacity='0';setTimeout(function(){toast.remove()},300)},2500);
+            }
+        }
 
         // ===== PWA: Service Worker =====
         if('serviceWorker' in navigator){
