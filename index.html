@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>变装反差 · 工作台</title>
+
+    <!-- PWA Meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="工作台">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a1a3e">
+    <meta name="description" content="变装反差赛道自媒体工作台 - 当日热点、优质视频整理、作品数据分析">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/icon-512.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --bg-primary:#0f0f1a;--bg-card:#1a1a2e;--bg-tag:rgba(255,255,255,0.05);
+            --bg-blur:rgba(15,15,26,0.95);--text-primary:#fff;--text-secondary:#a0a0b8;
+            --text-tertiary:#666680;--border-color:rgba(255,255,255,0.06);
+            --border-divider:rgba(255,255,255,0.05);--shadow-card:none;--accent-gold:#f0a500;
+            --header-1:#1a1a3e;--header-2:#2d1b4e;--header-3:#1a2e3e;
+            --glow-1:rgba(167,139,250,0.15);--glow-2:rgba(240,98,146,0.1);
+            --title-grad:linear-gradient(135deg,#fff 0%,#c0c0e0 100%);
+            --safe-bottom:env(safe-area-inset-bottom,0px)
+        }
+        [data-theme="light"]{
+            --bg-primary:#f5f5fa;--bg-card:#fff;--bg-tag:rgba(0,0,0,0.04);
+            --bg-blur:rgba(255,255,255,0.95);--text-primary:#1a1a2e;--text-secondary:#555570;
+            --text-tertiary:#9999b0;--border-color:rgba(0,0,0,0.06);
+            --border-divider:rgba(0,0,0,0.05);--shadow-card:0 2px 12px rgba(0,0,0,0.06);
+            --accent-gold:#e69500;--header-1:#667eea;--header-2:#764ba2;--header-3:#6b8cce;
+            --glow-1:rgba(255,255,255,0.2);--glow-2:rgba(255,255,255,0.1);
+            --title-grad:linear-gradient(135deg,#fff 0%,#f0f0ff 100%)
+        }
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;min-height:100dvh;overflow-x:hidden;transition:background .3s,color .3s}
+        .phone-frame{max-width:430px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;padding-bottom:calc(90px + var(--safe-bottom))}
+
+        /* A2HS Banner */
+        .a2hs-banner{display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:200;background:var(--bg-card);border:1px solid rgba(240,98,146,0.3);border-radius:16px;padding:16px;width:calc(100% - 32px);max-width:398px;box-shadow:0 8px 32px rgba(0,0,0,0.4);text-align:center}
+        .a2hs-banner.show{display:block;animation:slideUp .3s ease}
+        @keyframes slideUp{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+        .a2hs-title{font-size:16px;font-weight:700;margin-bottom:6px}
+        .a2hs-desc{font-size:13px;color:var(--text-secondary);margin-bottom:14px;line-height:1.5}
+        .a2hs-btn{display:inline-block;background:linear-gradient(135deg,#f06292,#e91e63);color:#fff;border:none;padding:10px 28px;border-radius:24px;font-size:14px;font-weight:600;cursor:pointer;margin:0 4px}
+        .a2hs-btn.secondary{background:var(--bg-tag);color:var(--text-secondary);border:1px solid var(--border-color)}
+        .a2hs-close{position:absolute;top:8px;right:12px;background:none;border:none;color:var(--text-tertiary);font-size:18px;cursor:pointer;padding:4px}
+
+        /* Header */
+        .header{background:linear-gradient(135deg,var(--header-1) 0%,var(--header-2) 50%,var(--header-3) 100%);padding:50px 20px 24px;border-radius:0 0 28px 28px;position:relative;overflow:hidden;transition:background .3s}
+        .header::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,var(--glow-1) 0%,transparent 70%);border-radius:50%}
+        .header::after{content:'';position:absolute;bottom:-30%;left:-10%;width:200px;height:200px;background:radial-gradient(circle,var(--glow-2) 0%,transparent 70%);border-radius:50%}
+        .header-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+        .header-greeting{font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:4px}
+        .header-title{font-size:26px;font-weight:800;background:var(--title-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .header-right{display:flex;align-items:center;gap:12px}
+        .header-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f06292,#e91e63);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,0.15)}
+        .theme-toggle{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .3s;position:relative;overflow:hidden}
+        .theme-toggle:active{transform:scale(0.9)}
+        .theme-toggle .icon-sun,.theme-toggle .icon-moon{font-size:22px;transition:transform .3s,opacity .3s;position:absolute}
+        .theme-toggle .icon-moon{opacity:1;transform:rotate(0deg)}
+        .theme-toggle .icon-sun{opacity:0;transform:rotate(180deg)}
+        [data-theme="light"] .theme-toggle .icon-moon{opacity:0;transform:rotate(-180deg)}
+        [data-theme="light"] .theme-toggle .icon-sun{opacity:1;transform:rotate(0deg)}
+
+        /* Status */
+        .status-bar{display:flex;gap:8px;padding:0 20px;margin-top:-12px;position:relative;z-index:2;flex-wrap:wrap}
+        .status-chip{background:var(--bg-card);border:1px solid var(--border-color);border-radius:20px;padding:6px 14px;font-size:12px;display:flex;align-items:center;gap:6px;color:var(--text-secondary);transition:background .3s}
+        .status-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,0.5);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+        /* Stats */
+        .stats-row{display:flex;gap:10px;padding:0 16px;margin-top:20px}
+        .stat-box{flex:1;background:var(--bg-card);border-radius:12px;padding:14px;text-align:center;box-shadow:var(--shadow-card);transition:background .3s}
+        .stat-num{font-size:22px;font-weight:800}
+        .stat-num.green{color:#4ade80}.stat-num.gold{color:#f0a500}.stat-num.pink{color:#f48fb1}
+        .stat-label{font-size:11px;color:var(--text-tertiary);margin-top:4px}
+
+        /* Section */
+        .section-container{padding:24px 16px 0}
+        .section-label{font-size:13px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border-divider) 0%,transparent 100%)}
+
+        /* Card */
+        .card{background:var(--bg-card);border-radius:16px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;transition:transform .2s,background .3s;cursor:pointer;box-shadow:var(--shadow-card)}
+        .card:active{transform:scale(0.97)}
+        .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px}
+        .card-hot::before{background:linear-gradient(180deg,#ff6b6b,#ff8e53)}
+        .card-dance::before{background:linear-gradient(180deg,#f06292,#e91e63)}
+        .card-data::before{background:linear-gradient(180deg,#a78bfa,#7c6cf0)}
+        .card-analysis::before{background:linear-gradient(180deg,#4ecdc4,#26a69a)}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+        .card-title-area{display:flex;align-items:center;gap:10px}
+        .card-icon{font-size:24px;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+        .card-hot .card-icon{background:rgba(255,107,107,0.12)}
+        .card-dance .card-icon{background:rgba(240,98,146,0.12)}
+        .card-data .card-icon{background:rgba(167,139,250,0.12)}
+        .card-analysis .card-icon{background:rgba(78,205,196,0.12)}
+        .card-title{font-size:17px;font-weight:700}
+        .card-subtitle{font-size:12px;color:var(--text-tertiary);margin-top:2px}
+        .badge{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600;display:flex;align-items:center;gap:4px}
+        .badge-active{background:rgba(74,222,128,0.12);color:#4ade80;border:1px solid rgba(74,222,128,0.2)}
+        .badge-manual{background:var(--bg-tag);color:var(--text-secondary);border:1px solid var(--border-color)}
+        .card-body{font-size:13px;color:var(--text-secondary);line-height:1.8}
+        .info-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+        .info-row:last-child{margin-bottom:0}
+        .info-icon{font-size:14px;width:20px;text-align:center}
+        .info-label{color:var(--text-tertiary);min-width:32px}
+        .info-value{color:var(--text-primary);font-weight:500}
+        .platform-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+        .platform-tag{font-size:11px;padding:3px 10px;border-radius:8px;background:var(--bg-tag);color:var(--text-secondary)}
+        .next-run{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border-divider)}
+        .next-run-label{font-size:11px;color:var(--text-tertiary)}
+        .next-run-time{font-size:12px;font-weight:600;color:var(--accent-gold)}
+        .quick-action{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;padding:12px;border-radius:12px;font-size:14px;font-weight:600;text-align:center;transition:opacity .2s}
+        .quick-action:active{opacity:0.7}
+        .qa-hot{background:linear-gradient(135deg,rgba(255,107,107,0.15),rgba(255,142,83,0.1));color:#ff8e8e;border:1px solid rgba(255,107,107,0.2)}
+        .qa-dance{background:linear-gradient(135deg,rgba(240,98,146,0.15),rgba(233,30,99,0.1));color:#f48fb1;border:1px solid rgba(240,98,146,0.2)}
+        .qa-data{background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(124,108,240,0.1));color:#c4b1ff;border:1px solid rgba(167,139,250,0.2)}
+
+        /* Bottom Nav */
+        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg-blur);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border-color);display:flex;padding:8px 0 calc(24px + var(--safe-bottom));z-index:100;transition:background .3s}
+        .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--text-tertiary);cursor:pointer;transition:color .2s}
+        .nav-item.active{color:#a78bfa}
+        .nav-icon{font-size:22px}
+
+        /* Hint */
+        .hint-box{margin:20px 16px 0;padding:14px 16px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.1);border-radius:12px;font-size:12px;color:var(--text-secondary);line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+        .hint-icon{font-size:16px;flex-shrink:0}
+
+        /* Cases */
+        .case-card{background:var(--bg-card);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow-card);transition:background .3s}
+        .case-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+        .case-rank{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0}
+        .case-rank.r1{background:linear-gradient(135deg,#FFD700,#FFA500)}
+        .case-rank.r2{background:linear-gradient(135deg,#C0C0C0,#A0A0A0)}
+        .case-rank.r3{background:linear-gradient(135deg,#CD7F32,#B87333)}
+        .case-title{font-size:15px;font-weight:700;flex:1}
+        .case-data-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+        .case-data-chip{font-size:11px;padding:3px 8px;border-radius:6px;background:var(--bg-tag);color:var(--text-secondary)}
+        .case-data-chip.hot{background:rgba(255,107,107,0.1);color:#ff8e8e}
+        .case-why{font-size:13px;color:var(--text-secondary);line-height:1.7}
+        .case-why b{color:var(--text-primary)}
+        .case-key{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+        .key-tag{font-size:11px;padding:3px 8px;border-radius:6px;font-weight:500}
+        .key-tag.pink{background:rgba(240,98,146,0.1);color:#f48fb1}
+        .key-tag.purple{background:rgba(167,139,250,0.1);color:#c4b1ff}
+        .key-tag.teal{background:rgba(78,205,196,0.1);color:#6ee5dd}
+        .key-tag.gold{background:rgba(240,165,0,0.1);color:#ffd54f}
+
+        /* Formula */
+        .formula-card{background:var(--bg-card);border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow-card);transition:background .3s}
+        .formula-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+        .formula-step{display:flex;gap:10px;margin-bottom:14px}
+        .formula-step:last-child{margin-bottom:0}
+        .formula-num{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#f06292,#e91e63);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .formula-content{flex:1}
+        .formula-step-title{font-size:14px;font-weight:600;margin-bottom:3px}
+        .formula-step-desc{font-size:12px;color:var(--text-tertiary);line-height:1.6}
+
+        /* Time Slots */
+        .time-slot-card{margin:20px 16px 0;background:var(--bg-card);border-radius:16px;padding:18px;box-shadow:var(--shadow-card);transition:background .3s}
+        .time-slot-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+        .time-slots{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+        .time-slots::-webkit-scrollbar{display:none}
+        .time-slot{flex-shrink:0;min-width:80px;background:var(--bg-tag);border-radius:12px;padding:12px;text-align:center;border:1px solid var(--border-color)}
+        .time-slot.best{background:linear-gradient(135deg,rgba(240,98,146,0.12),rgba(233,30,99,0.06));border:1px solid rgba(240,98,146,0.25)}
+        .time-slot-time{font-size:16px;font-weight:700;color:var(--text-primary)}
+        .time-slot-label{font-size:10px;color:var(--text-tertiary);margin-top:4px}
+        .time-slot-fire{font-size:11px;margin-top:6px}
+
+        /* Dimensions */
+        .dimension-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+        .dim-tag{font-size:11px;padding:4px 10px;border-radius:8px;font-weight:500}
+        .dim-tag.pink{background:rgba(240,98,146,0.1);color:#f48fb1}
+        .dim-tag.purple{background:rgba(167,139,250,0.1);color:#c4b1ff}
+        .dim-tag.teal{background:rgba(78,205,196,0.1);color:#6ee5dd}
+        .dim-tag.gold{background:rgba(240,165,0,0.1);color:#ffd54f}
+
+        .divider{height:1px;background:var(--border-divider);margin:20px 16px}
+
+        /* Offline */
+        .offline-badge{display:none;position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#f0a500;color:#000;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;z-index:300}
+        .offline-badge.show{display:block}
+    </style>
+</head>
+<body>
+    <!-- Offline Badge -->
+    <div class="offline-badge" id="offlineBadge">📡 离线模式</div>
+
+    <!-- Add to Home Screen Banner -->
+    <div class="a2hs-banner" id="a2hsBanner">
+        <button class="a2hs-close" onclick="dismissA2HS()">✕</button>
+        <div class="a2hs-title">📱 添加到主屏幕</div>
+        <div class="a2hs-desc">像 App 一样全屏使用，体验更佳！</div>
+        <button class="a2hs-btn" id="a2hsInstallBtn" onclick="installPWA()">立即添加</button>
+        <button class="a2hs-btn secondary" onclick="dismissA2HS()">稍后再说</button>
+    </div>
+
+    <div class="phone-frame">
+        <div class="header">
+            <div class="header-top">
+                <div>
+                    <div class="header-greeting" id="greeting">早上好，创作者</div>
+                    <div class="header-title">我的工作台</div>
+                </div>
+                <div class="header-right">
+                    <div class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                        <span class="icon-moon">🌙</span>
+                        <span class="icon-sun">☀️</span>
+                    </div>
+                    <div class="header-avatar">💄</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-chip"><span class="status-dot"></span><span>2个任务运行中</span></div>
+            <div class="status-chip"><span id="currentDate">📅 2026.07.31</span></div>
+            <div class="status-chip"><span>💄 变装反差赛道</span></div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-num green">2</div><div class="stat-label">定时任务</div></div>
+            <div class="stat-box"><div class="stat-num gold">1</div><div class="stat-label">手动触发</div></div>
+            <div class="stat-box"><div class="stat-num pink">3</div><div class="stat-label">板块总数</div></div>
+        </div>
+
+        <div class="time-slot-card">
+            <div class="time-slot-title"><span>⏰</span><span>变装赛道 · 最佳发布时间</span></div>
+            <div class="time-slots">
+                <div class="time-slot"><div class="time-slot-time">07:00</div><div class="time-slot-label">早间通勤</div><div class="time-slot-fire">🔥🔥</div></div>
+                <div class="time-slot best"><div class="time-slot-time">12:00</div><div class="time-slot-label">午休高峰</div><div class="time-slot-fire">🔥🔥🔥🔥</div></div>
+                <div class="time-slot"><div class="time-slot-time">18:00</div><div class="time-slot-label">晚间通勤</div><div class="time-slot-fire">🔥🔥🔥</div></div>
+                <div class="time-slot best"><div class="time-slot-time">21:00</div><div class="time-slot-label">夜间黄金</div><div class="time-slot-fire">🔥🔥🔥🔥🔥</div></div>
+                <div class="time-slot"><div class="time-slot-time">22:30</div><div class="time-slot-label">深夜档</div><div class="time-slot-fire">🔥🔥🔥</div></div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <div class="section-label">核心板块</div>
+            <div class="card card-hot" onclick="cardAction('hot')">
+                <div class="card-header">
+                    <div class="card-title-area">
+                        <div class="card-icon">🔥</div>
+                        <div><div class="card-title">当日热点</div><div class="card-subtitle">每日最新热点推送</div></div>
+                    </div>
+                    <div class="badge badge-active"><span style="width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block"></span>已启用</div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row"><span class="info-icon">⏰</span><span class="info-label">推送</span><span class="info-value">每天 09:00</span></div>
+                    <div class="info-row"><span class="info-icon">📊</span><span class="info-label">内容</span><span class="info-value">Top 10 热点 + 摘要 + 链接</span></div>
+                    <div class="platform-tags"><span class="platform-tag">微博热搜</span><span class="platform-tag">抖音热榜</span><span class="platform-tag">百度热搜</span><span class="platform-tag">知乎热榜</span></div>
+                </div>
+                <div class="next-run"><span class="next-run-label">下次执行</span><span class="next-run-time">今天 09:00</span></div>
+            </div>
+            <div class="card card-dance" onclick="cardAction('dance')">
+                <div class="card-header">
+                    <div class="card-title-area">
+                        <div class="card-icon">💄</div>
+                        <div><div class="card-title">变装反差视频</div><div class="card-subtitle">妆前妆后 · 最新优质视频整理</div></div>
+                    </div>
+                    <div class="badge badge-active"><span style="width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block"></span>已启用</div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row"><span class="info-icon">⏰</span><span class="info-label">推送</span><span class="info-value">每天 12:00</span></div>
+                    <div class="info-row"><span class="info-icon">📊</span><span class="info-label">内容</span><span class="info-value">Top 10 优质变装视频 + 数据 + 链接</span></div>
+                    <div class="platform-tags"><span class="platform-tag">抖音</span><span class="platform-tag">快手</span><span class="platform-tag">小红书</span><span class="platform-tag">妆前妆后</span><span class="platform-tag">变装转场</span><span class="platform-tag">反差感</span></div>
+                </div>
+                <div class="next-run"><span class="next-run-label">下次执行</span><span class="next-run-time">今天 12:00</span></div>
+            </div>
+            <div class="card card-data" onclick="cardAction('data')">
+                <div class="card-header">
+                    <div class="card-title-area">
+                        <div class="card-icon">📊</div>
+                        <div><div class="card-title">作品数据分析</div><div class="card-subtitle">逐条分析 · 找不足 · 给建议 · 发布时间</div></div>
+                    </div>
+                    <div class="badge badge-manual"><span>👆</span>手动触发</div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row"><span class="info-icon">🔗</span><span class="info-label">方式</span><span class="info-value">发视频/链接即触发分析</span></div>
+                    <div class="info-row"><span class="info-icon">📋</span><span class="info-label">分析</span><span class="info-value">6大维度逐条诊断</span></div>
+                    <div class="dimension-tags">
+                        <span class="dim-tag pink">💄 妆容反差</span>
+                        <span class="dim-tag purple">🎬 转场节奏</span>
+                        <span class="dim-tag teal">🖼️ 封面首帧</span>
+                        <span class="dim-tag gold">✍️ 标题文案</span>
+                        <span class="dim-tag pink">🎵 音乐卡点</span>
+                        <span class="dim-tag gold">⏰ 发布时间</span>
+                    </div>
+                </div>
+                <div class="quick-action qa-data" onclick="event.stopPropagation();sendPrompt('帮我分析我的作品，我会发视频或链接给你')">📤 发视频/链接开始分析</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-container">
+            <div class="section-label">🔥 爆款案例 · 为什么会火</div>
+            <div class="case-card">
+                <div class="case-header">
+                    <div class="case-rank r1">1</div>
+                    <div class="case-title">APT反差变装转场</div>
+                </div>
+                <div class="case-data-row">
+                    <span class="case-data-chip hot">点赞 189.7万</span>
+                    <span class="case-data-chip">抖音</span>
+                    <span class="case-data-chip">#APT转场 #反差</span>
+                </div>
+                <div class="case-why">
+                    <b>爆火核心：</b>利用朴彩英《APT》歌曲节奏卡点，妆前素颜→妆后精致的瞬间转场，配合灯光绕手特效，视觉冲击极强。<br><br>
+                    <b>为什么火：</b>① 音乐自带流量（热歌BGM→平台算法加权）；② 转场技术门槛适中但效果惊艳→引发模仿传播；③ 妆前妆后反差越大→完播率越高→算法持续推荐。
+                </div>
+                <div class="case-key">
+                    <span class="key-tag pink">💄 妆前妆后反差极大</span>
+                    <span class="key-tag purple">🎵 热歌卡点转场</span>
+                    <span class="key-tag teal">✨ 灯光特效加成</span>
+                </div>
+            </div>
+            <div class="case-card">
+                <div class="case-header">
+                    <div class="case-rank r2">2</div>
+                    <div class="case-title">素人爆改女明星</div>
+                </div>
+                <div class="case-data-row">
+                    <span class="case-data-chip hot">百万级点赞</span>
+                    <span class="case-data-chip">抖音</span>
+                    <span class="case-data-chip">#爆改 #素人改造</span>
+                </div>
+                <div class="case-why">
+                    <b>爆火核心：</b>"素人→女明星"的身份跃迁叙事，比单纯变装更有故事性。观众天然爱看"丑小鸭变天鹅"的蜕变过程。<br><br>
+                    <b>为什么火：</b>① "爆改"话题自带流量池；② 改造前后对比→评论区炸裂→互动率飙升→算法加权；③ 让观众产生代入感→"我也能变美"→大量转发。
+                </div>
+                <div class="case-key">
+                    <span class="key-tag pink">📖 蜕变叙事感</span>
+                    <span class="key-tag gold">💬 评论区高互动</span>
+                    <span class="key-tag purple">🏷️ 爆改话题流量</span>
+                </div>
+            </div>
+            <div class="case-card">
+                <div class="case-header">
+                    <div class="case-rank r3">3</div>
+                    <div class="case-title">翻镜子反差变装挑战</div>
+                </div>
+                <div class="case-data-row">
+                    <span class="case-data-chip hot">全网爆款</span>
+                    <span class="case-data-chip">抖音+小红书</span>
+                    <span class="case-data-chip">#翻镜子变装</span>
+                </div>
+                <div class="case-why">
+                    <b>爆火核心：</b>用"翻镜子"作为转场道具——镜子翻过来是素颜，翻过去是精致妆容。创意转场方式比单纯剪辑更吸睛。<br><br>
+                    <b>为什么火：</b>① 道具创意新颖→第一眼抓住注意力（黄金3秒）；② 挑战赛形式→大量跟拍→话题雪球越滚越大；③ 双平台传播→流量叠加。
+                </div>
+                <div class="case-key">
+                    <span class="key-tag teal">🪞 创意道具转场</span>
+                    <span class="key-tag pink">🚀 挑战赛裂变传播</span>
+                    <span class="key-tag gold">📱 多平台分发</span>
+                </div>
+            </div>
+            <div class="case-card">
+                <div class="case-header">
+                    <div class="case-rank" style="background:linear-gradient(135deg,#a78bfa,#7c6cf0)">4</div>
+                    <div class="case-title">印度变装·异域风情</div>
+                </div>
+                <div class="case-data-row">
+                    <span class="case-data-chip">8.5万赞/条</span>
+                    <span class="case-data-chip">抖音</span>
+                    <span class="case-data-chip">#印度变装 #手语舞</span>
+                </div>
+                <div class="case-why">
+                    <b>爆火核心：</b>异域风格变装+手语舞动作，用"文化差异感"制造新鲜感。异域元素自带猎奇属性。<br><br>
+                    <b>为什么火：</b>① 异域风格→差异化竞争→脱颖而出；② 手语舞→有教学跟拍价值→收藏率提升；③ 夸张标签→点开率极高。
+                </div>
+                <div class="case-key">
+                    <span class="key-tag purple">🌍 异域差异化</span>
+                    <span class="key-tag teal">🙌 跟拍教学价值</span>
+                    <span class="key-tag gold">🏷️ 夸张标签引流</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <div class="section-label">✨ 变装爆款公式</div>
+            <div class="formula-card">
+                <div class="formula-title"><span>📐</span><span>5步爆款公式 · 可直接套用</span></div>
+                <div class="formula-step">
+                    <div class="formula-num">1</div>
+                    <div class="formula-content">
+                        <div class="formula-step-title">前3秒素颜"普通感"</div>
+                        <div class="formula-step-desc">故意展示最普通的状态（刘海夹起、家居服、无表情），制造"这个人很普通"的预期。越普通→反差越大→完播率越高。</div>
+                    </div>
+                </div>
+                <div class="formula-step">
+                    <div class="formula-num">2</div>
+                    <div class="formula-content">
+                        <div class="formula-step-title">热歌BGM卡点转场</div>
+                        <div class="formula-step-desc">选用当前热门歌曲的高潮片段作为转场音乐，音乐节拍点=变装瞬间。热歌自带平台流量加权。</div>
+                    </div>
+                </div>
+                <div class="formula-step">
+                    <div class="formula-num">3</div>
+                    <div class="formula-content">
+                        <div class="formula-step-title">转场瞬间"换头级"反差</div>
+                        <div class="formula-step-desc">妆后要达到"判若两人"的效果——妆容、发型、服装、灯光同时变化。反差越大→转发率越高。</div>
+                    </div>
+                </div>
+                <div class="formula-step">
+                    <div class="formula-num">4</div>
+                    <div class="formula-content">
+                        <div class="formula-step-title">结尾留互动钩子</div>
+                        <div class="formula-step-desc">结尾用"你觉得哪个好看？""素颜还是妆后？"等提问引导评论。评论率=算法推荐核心指标。</div>
+                    </div>
+                </div>
+                <div class="formula-step">
+                    <div class="formula-num">5</div>
+                    <div class="formula-content">
+                        <div class="formula-step-title">黄金时段发布</div>
+                        <div class="formula-step-desc">12:00午休或21:00夜间黄金档发布，覆盖最大活跃用户。配合#变装 #妆前妆后 #反差 等热门标签。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <div class="section-label">快捷操作</div>
+            <div class="card card-hot" style="padding:14px 16px" onclick="sendPrompt('现在帮我搜一下今天的热点')">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span style="font-size:22px">⚡</span>
+                    <div style="flex:1"><div style="font-size:15px;font-weight:600">立即查看今日热点</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">不等定时推送，现在就搜</div></div>
+                    <span style="color:var(--text-tertiary);font-size:18px">›</span>
+                </div>
+            </div>
+            <div class="card card-dance" style="padding:14px 16px" onclick="sendPrompt('现在帮我搜一下变装反差、妆前妆后的最新优质视频，抖音快手小红书都要')">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span style="font-size:22px">🔎</span>
+                    <div style="flex:1"><div style="font-size:15px;font-weight:600">立即搜索变装反差视频</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">不等定时推送，现在就搜</div></div>
+                    <span style="color:var(--text-tertiary);font-size:18px">›</span>
+                </div>
+            </div>
+            <div class="card card-data" style="padding:14px 16px" onclick="sendPrompt('帮我分析我的作品，我会发视频或链接给你')">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span style="font-size:22px">📊</span>
+                    <div style="flex:1"><div style="font-size:15px;font-weight:600">分析我的作品</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">发视频/链接，逐条诊断+改进建议</div></div>
+                    <span style="color:var(--text-tertiary);font-size:18px">›</span>
+                </div>
+            </div>
+            <div class="card card-analysis" style="padding:14px 16px" onclick="sendPrompt('帮我查看我当前的定时任务列表')">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span style="font-size:22px">⚙️</span>
+                    <div style="flex:1"><div style="font-size:15px;font-weight:600">管理定时任务</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">查看 / 暂停 / 修改 / 删除</div></div>
+                    <span style="color:var(--text-tertiary);font-size:18px">›</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hint-box">
+            <span class="hint-icon">💡</span>
+            <div>
+                <b>PWA 使用提示</b><br>
+                • 热点和变装视频每天自动推送，无需操作<br>
+                • 作品分析：随时发视频文件或链接给我<br>
+                • 点击右上角 🌙/☀️ 切换夜间/日间模式<br>
+                • <b>添加到主屏幕</b>即可像 App 一样全屏使用
+            </div>
+        </div>
+        <div style="height:20px"></div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <div class="nav-item active"><span class="nav-icon">🏠</span><span>工作台</span></div>
+        <div class="nav-item" onclick="sendPrompt('帮我查看定时任务列表')"><span class="nav-icon">⏰</span><span>任务</span></div>
+        <div class="nav-item" onclick="sendPrompt('帮我分析我的作品，我会发视频或链接给你')"><span class="nav-icon">📊</span><span>分析</span></div>
+        <div class="nav-item" onclick="toggleTheme()"><span class="nav-icon" id="navThemeIcon">🌙</span><span id="navThemeLabel">夜间</span></div>
+    </div>
+
+    <script>
+        // === Greeting ===
+        function updateGreeting(){var h=new Date().getHours(),g='';if(h<6)g='凌晨好，创作者';else if(h<9)g='早上好，创作者';else if(h<12)g='上午好，创作者';else if(h<14)g='中午好，创作者';else if(h<18)g='下午好，创作者';else if(h<22)g='晚上好，创作者';else g='夜深了，创作者';document.getElementById('greeting').textContent=g}updateGreeting();
+
+        // === Date ===
+        function updateDate(){var d=new Date();var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');document.getElementById('currentDate').textContent='📅 '+y+'.'+m+'.'+day}updateDate();
+
+        // === Theme ===
+        function toggleTheme(){var html=document.documentElement;var cur=html.getAttribute('data-theme');var nt=cur==='light'?'dark':'light';if(nt==='light'){html.setAttribute('data-theme','light');document.getElementById('navThemeIcon').textContent='☀️';document.getElementById('navThemeLabel').textContent='日间';document.querySelector('meta[name="theme-color"]').setAttribute('content','#667eea')}else{html.removeAttribute('data-theme');document.getElementById('navThemeIcon').textContent='🌙';document.getElementById('navThemeLabel').textContent='夜间';document.querySelector('meta[name="theme-color"]').setAttribute('content','#1a1a3e')}try{localStorage.setItem('theme',nt)}catch(e){}}try{var s=localStorage.getItem('theme');if(s==='light'){document.documentElement.setAttribute('data-theme','light');document.getElementById('navThemeIcon').textContent='☀️';document.getElementById('navThemeLabel').textContent='日间';document.querySelector('meta[name="theme-color"]').setAttribute('content','#667eea')}}catch(e){}
+
+        // === Card Actions ===
+        function cardAction(type){if(type==='hot')sendPrompt('现在帮我搜一下今天的热点');else if(type==='dance')sendPrompt('现在帮我搜一下变装反差、妆前妆后的最新优质视频，抖音快手小红书都要');else if(type==='data')sendPrompt('帮我分析我的作品，我会发视频或链接给你')}
+        function sendPrompt(text){console.log('sendPrompt:',text)}
+
+        // ===== PWA: Service Worker =====
+        if('serviceWorker' in navigator){
+            window.addEventListener('load',function(){
+                navigator.serviceWorker.register('/sw.js').then(function(reg){
+                    console.log('SW registered:',reg.scope);
+                }).catch(function(err){console.log('SW failed:',err)})
+            })
+        }
+
+        // ===== PWA: Add to Home Screen =====
+        var deferredPrompt;
+        var a2hsBanner=document.getElementById('a2hsBanner');
+        var installBtn=document.getElementById('a2hsInstallBtn');
+
+        window.addEventListener('beforeinstallprompt',function(e){
+            e.preventDefault();
+            deferredPrompt=e;
+            // Show banner after 3 seconds if not installed
+            var dismissed=localStorage.getItem('a2hs-dismissed');
+            if(!dismissed || Date.now()-parseInt(dismissed)>86400000){
+                setTimeout(function(){a2hsBanner.classList.add('show')},3000)
+            }
+        });
+
+        function installPWA(){
+            if(deferredPrompt){
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function(result){
+                    a2hsBanner.classList.remove('show');
+                    deferredPrompt=null;
+                })
+            }else{
+                // iOS Safari fallback - show instructions
+                alert('请点击浏览器底部的「分享」按钮，然后选择「添加到主屏幕」')
+            }
+        }
+
+        function dismissA2HS(){
+            a2hsBanner.classList.remove('show');
+            try{localStorage.setItem('a2hs-dismissed',Date.now())}catch(e){}
+        }
+
+        // Hide banner if already in standalone mode
+        if(window.matchMedia('(display-mode: standalone)').matches || navigator.standalone){
+            a2hsBanner.style.display='none'
+        }
+
+        // ===== Online/Offline =====
+        var offlineBadge=document.getElementById('offlineBadge');
+        window.addEventListener('online',function(){offlineBadge.classList.remove('show')});
+        window.addEventListener('offline',function(){offlineBadge.classList.add('show')});
+    </script>
+</body>
+</html>
